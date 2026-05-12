@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Vietnamese Medical VQA — a parameter-efficient multimodal system for chest X-ray question answering in Vietnamese. Trained on a single T4 GPU.">
+<meta property="og:title" content="Vietnamese Medical VQA">
+<meta property="og:description" content="A parameter-efficient multimodal system for Vietnamese chest X-ray question answering.">
+<title>Vietnamese Medical VQA — Tran Thi The Nhan, Nguyen Phuc Minh Dang</title>
+
+<!--
+  Font selection rationale:
+   • Fraunces (display) — a contemporary serif with optical sizes; editorial, serious.
+   • IBM Plex Sans (body) — open-source, technical clarity, paired well with serifs.
+   • IBM Plex Mono (numbers / code) — same family, monospaced.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- NAV bar -->
+<nav class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="#top" class="nav__brand">
+      <span class="nav__brand-mark">⁘</span>
+      <span class="nav__brand-text">Vietnamese Medical VQA</span>
+    </a>
+    <ul class="nav__links">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#samples">Predictions</a></li>
+      <li><a href="#reproduce">Reproducibility</a></li>
+    </ul>
+    <a href="#contact" class="nav__cta">Cite this work →</a>
+  </div>
+</nav>
+
+
+<!-- HERO section -->
+<header id="top" class="hero">
+  <div class="hero__grid-overlay" aria-hidden="true"></div>
+
+  <!-- ── Hero composition: X-ray → arrow → Vietnamese question ── -->
+  <!-- Decorative; not announced to screen readers since the same -->
+  <!-- example appears in section02 as a properly labelled figure.       -->
+  <div class="hero-stage" aria-hidden="true">
+
+    <!-- The chest X-ray.  Blurred a touch and tinted toward paper so -->
+    <!-- it integrates with the background rather than fighting it.    -->
+    <figure class="hero-stage__xray">
+      <div class="hero-stage__xray-frame">
+        <img src="assets/xray.png" alt="">
+        <span class="hero-stage__xray-label">INPUT · CHEST X-RAY</span>
+        <span class="hero-stage__xray-corner hero-stage__xray-corner--tl"></span>
+        <span class="hero-stage__xray-corner hero-stage__xray-corner--tr"></span>
+        <span class="hero-stage__xray-corner hero-stage__xray-corner--bl"></span>
+        <span class="hero-stage__xray-corner hero-stage__xray-corner--br"></span>
+      </div>
+    </figure>
+
+    <svg class="hero-stage__arrow" viewBox="0 0 240 200"
+         preserveAspectRatio="none" fill="none">
+      <defs>
+        <marker id="hero-arrowhead" markerWidth="10" markerHeight="10"
+                refX="6" refY="5" orient="auto">
+          <path d="M0,0 L10,5 L0,10 L3,5 Z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <path class="hero-stage__arrow-path"
+            d="M 40 10 C 40 70, 100 80, 140 130 S 200 175, 215 185"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            marker-end="url(#hero-arrowhead)"/>
+    </svg>
+
+    <!-- The model's input question, rendered as a small floating card. -->
+    <aside class="hero-stage__question">
+      <p class="hero-stage__question-tag">QUESTION · VIETNAMESE</p>
+      <p class="hero-stage__question-text" lang="vi">
+        có bằng chứng nào về tràn dịch màng phổi hoặc các tụ dịch
+        khác trên x-quang ngực không<span class="hero-stage__question-mark">?</span>
+      </p>
+    </aside>
+
+  </div>
+
+  <div class="hero__inner">
+    <p class="hero__eyebrow reveal">
+      <span class="hero__eyebrow-dot"></span>
+      Undergraduate IT Project · Ton Duc Thang University · 2025–2026
+    </p>
+
+    <h1 class="hero__title reveal" style="--delay: 0.08s">
+      Advancing Vietnamese<br>
+      <em>Visual Question Answering</em><br>
+      <span class="hero__title-tail">for healthcare.</span>
+    </h1>
+
+    <p class="hero__lede reveal" style="--delay: 0.16s">
+      An end-to-end Vietnamese Medical VQA system designed to answer free-form clinical questions regarding <strong>diverse medical imagery</strong> (including chest X-rays, brain MRIs, etc...). Built on 
+      a custom architecture utilizing a <strong>Qwen2.5-3B backbone</strong> and <strong>Multi-Scale Cross-Attention</strong>, 
+      this parameter-efficient model was trained on 8,000 QA pairs.
+    </p>
+
+    <ul class="hero__authors reveal" style="--delay: 0.22s">
+      <li>
+        <span class="hero__author-name">Tran Thi The Nhan</span>
+      </li>
+      <li class="hero__author-sep" aria-hidden="true">·</li>
+      <li>
+        <span class="hero__author-name">Nguyen Phuc Minh Dang</span>
+      </li>
+    </ul>
+
+    <p class="hero__affiliation reveal" style="--delay: 0.26s">
+      Faculty of Information Technology — Ton Duc Thang University, Ho Chi Minh City, Vietnam
+    </p>
+
+    <div class="hero__actions reveal" style="--delay: 0.32s">
+      <a href="#results" class="btn btn--primary">
+        <span>See the results</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M5 12h14M13 5l7 7-7 7"/>
+        </svg>
+      </a>
+
+      <a href="https://hoo.be/verisbabythenhan" target="_blank" rel="noopener" class="btn btn--ghost">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        <span>Author links</span>
+      </a>
+    </div>
+
+    <!-- Headline metrics -->
+    <section class="hero__metrics reveal" style="--delay: 0.42s" aria-label="Headline results">
+      <p class="hero__metrics-caption">
+        Test set · 800 samples · beam-4 decoding
+      </p>
+      <div class="metrics">
+        <article class="metric">
+          <p class="metric__label">ROUGE-L</p>
+          <p class="metric__value" data-target="55.41" data-decimals="2">55.41</p>
+          <p class="metric__delta">
+            <span class="metric__delta-arrow">▲</span>
+            +14.07 over Qwen2.5-VL
+          </p>
+        </article>
+        <article class="metric">
+          <p class="metric__label">BLEU-4</p>
+          <p class="metric__value" data-target="27.15" data-decimals="2">27.15</p>
+          <p class="metric__delta">
+            <span class="metric__delta-arrow">▲</span>
+            +14.47 over Qwen2.5-VL
+          </p>
+        </article>
+        <article class="metric">
+          <p class="metric__label">MDR
+            <span class="metric__label-tag">clinical recall</span>
+          </p>
+          <p class="metric__value" data-target="64.45" data-decimals="2">64.45</p>
+          <p class="metric__delta">
+            <span class="metric__delta-arrow">▲</span>
+            +11.57 over Qwen2.5-VL
+          </p>
+        </article>
+      </div>
+      <p class="hero__metrics-footnote">
+        Comparison: our beam-4 score vs Qwen2.5-VL-3B (zero-shot, greedy decoding).
+        Under matched greedy decoding our system reaches 53.06 / 24.65 / 64.58 — also above every baseline.
+      </p>
+    </section>
+  </div>
+
+  <!-- decorative bottom rule -->
+  <div class="hero__rule" aria-hidden="true">
+    <span></span><em>chest X-ray · Vietnamese clinical questions · free-form answers</em><span></span>
+  </div>
+</header>
+
+
+<!-- PROBLEM -->
+<section id="problem" class="section section--paper">
+  <div class="section__inner section__inner--narrow">
+    <p class="section__kicker reveal">01 — The gap</p>
+    <h2 class="section__title reveal" style="--delay: 0.08s">
+      Vietnamese clinicians are reading the same images as everyone else.
+      They&rsquo;re asking questions in their own language. Today&rsquo;s medical AI
+      barely listens.
+    </h2>
+
+    <div class="problem-grid">
+      <div class="problem-cell reveal" style="--delay: 0.18s">
+        <p class="problem-cell__num">8,000<span>&nbsp;</span></p>
+        <p class="problem-cell__lbl">
+          chest-X-ray Q–A pairs we translated from MIMIC-CXR and VQA-RAD —
+          the corpus that didn&rsquo;t exist before this project.
+        </p>
+      </div>
+      <div class="problem-cell reveal" style="--delay: 0.24s">
+        <p class="problem-cell__num">1<span>&nbsp;</span></p>
+        <p class="problem-cell__lbl">
+          NVIDIA T4 GPU. The entire training pipeline fits within the
+          memory of a free Kaggle session.
+        </p>
+      </div>
+      <div class="problem-cell reveal" style="--delay: 0.30s">
+        <p class="problem-cell__num">3B<span>&nbsp;</span></p>
+        <p class="problem-cell__lbl">
+          parameters — our budget, against published vision-language models
+          ranging from 2B to 4B that we benchmark zero-shot.
+        </p>
+      </div>
+    </div>
+
+    <p class="section__prose reveal" style="--delay: 0.40s">
+      Vietnamese is an analytic language with unmarked word boundaries: spaces separate
+      <em>syllables</em>, not semantic words. Multilingual encoders trained on space-separated
+      languages systematically degrade on Vietnamese clinical text — the very text that contains
+      the patient&rsquo;s symptoms, the radiologist&rsquo;s impression, and the question a doctor
+      actually wants answered.
+    </p>
+
+    <p class="section__prose reveal" style="--delay: 0.46s">
+      Our hypothesis: <strong>a small system built specifically for Vietnamese medical language
+      will outperform much larger general-purpose models on Vietnamese medical tasks.</strong>
+      This project tests it.
+    </p>
+  </div>
+</section>
+
+
+<!-- METHOD -->
+<section id="method" class="section section--dark">
+  <div class="section__inner">
+    <header class="section__head reveal">
+      <p class="section__kicker section__kicker--inverted">02 — Method</p>
+      <h2 class="section__title section__title--inverted">
+        Four modules. One T4 GPU. A pipeline shaped by Vietnamese clinical text.
+      </h2>
+    </header>
+
+    <!-- Architecture figure -->
+    <figure class="archi reveal" style="--delay: 0.18s">
+      <div class="archi__frame">
+        <img src="assets/architecture.jpg" alt="Architecture overview: chest X-ray and Vietnamese question flow through IEM, QEM, MSCAv2, and TAM modules to produce a Vietnamese answer.">
+      </div>
+      <figcaption class="archi__caption">
+        <span class="archi__caption-num">Figure 1</span>
+        End-to-end architecture. Frozen biomedical encoders feed a custom cross-attention
+        adapter; a 4-bit quantized Qwen2.5-3B generates the answer. Only the colored modules
+        are trainable.
+      </figcaption>
+    </figure>
+
+    <div class="detail-figures">
+      <article class="detail-figure detail-figure--paper reveal" style="--delay: 0.22s">
+        <header class="detail-figure__head">
+          <p class="detail-figure__num">Figure 2 · Image-Embedding Module (IEM)</p>
+          <h3 class="detail-figure__title">Two frozen vision encoders, one trainable bridge.</h3>
+        </header>
+        <div class="detail-figure__frame detail-figure__frame--light">
+          <img src="assets/iem.jpg" alt="IEM diagram showing an augmented chest X-ray feeding two frozen vision encoders (BiomedCLIP and DINOv3) in parallel, with DINOv3 features passing through a trainable projection (dim_proj). The two streams merge into two outputs: enhanced_global (low-frequency context) and enhanced_local (fine-grained anatomy).">
+        </div>
+        <p class="detail-figure__body">
+          The augmented X-ray flows through <strong>BiomedCLIP ViT-B/16</strong> and
+          <strong>DINOv3 ViT-S/16</strong> in parallel. BiomedCLIP contributes
+          domain-aligned <em>biomedical-text-trained</em> features at the global level;
+          DINOv3 contributes self-supervised <em>structural</em> features at the patch
+          level, projected by the trainable <code>dim_proj</code> layer to match the
+          shared 768-dimensional space. The module emits two heterogeneous outputs —
+          <code>enhanced_global</code> for low-frequency context and
+          <code>enhanced_local</code> for fine-grained anatomical regions — which the
+          MSCA adapter consumes downstream. Keeping both encoders frozen is what
+          makes single-T4 training feasible.
+        </p>
+      </article>
+
+      <article class="detail-figure detail-figure--paper reveal" style="--delay: 0.28s">
+        <header class="detail-figure__head">
+          <p class="detail-figure__num">Figure 3 · Vietnamese text preprocessing pipeline</p>
+          <h3 class="detail-figure__title">A two-stage pipeline: build once offline, augment every batch.</h3>
+        </header>
+        <div class="detail-figure__frame detail-figure__frame--light">
+          <img src="assets/textproc.jpg" alt="Text preprocessing pipeline split into two stages. Data-prep time (top): build syllable lexicon, Unicode NFC, abbreviation expansion, DP syllable re-segmenter, underthesea word tokenization — applied once to both Q and A, then stored. Train-time (bottom): synonym replace, word dropout, template swap, stochastic router — applied per batch to questions only.">
+        </div>
+        <p class="detail-figure__body">
+          Vietnamese clinical text needs more than a tokenizer. <strong>Data-prep time</strong>
+          (yellow) runs once over the corpus: a corpus-derived syllable lexicon, Unicode NFC
+          normalization, medical-abbreviation expansion, our novel
+          <strong>DP syllable re-segmenter</strong> that splits concatenated tokens
+          (<code>timtrungthất → tim trung thất</code>), and finally underthesea
+          word-level tokenization that aligns text to the units ViHealthBERT was
+          pre-trained on. <strong>Train-time</strong> (blue) augments only the
+          question side, per batch, via a stochastic router that selects at most one
+          of synonym replacement, word dropout, or template swap — preserving the
+          ground-truth answer so the training signal stays unambiguous.
+        </p>
+      </article>
+    </div>
+
+    <!-- Three pillars -->
+    <div class="pillars">
+      <article class="pillar reveal" style="--delay: 0.22s">
+        <p class="pillar__index">i.</p>
+        <h3 class="pillar__title">A Vietnamese-aware text pipeline.</h3>
+        <p class="pillar__body">
+          A dynamic-programming syllable re-segmenter splits concatenated tokens
+          (<code>timtrungthất</code> → <code>tim trung thất</code>) before tokenization,
+          followed by Underthesea word segmentation and Unicode NFC normalization.
+          This single intervention drives the largest measured gain in our ablation.
+        </p>
+        <ul class="pillar__list">
+          <li>Custom DP re-segmenter, corpus-derived word frequencies</li>
+          <li>ViHealthBERT encoder with LoRA r=8</li>
+          <li>Semantically safe augmentation for clinical text</li>
+        </ul>
+      </article>
+
+      <article class="pillar reveal" style="--delay: 0.28s">
+        <p class="pillar__index">ii.</p>
+        <h3 class="pillar__title">A dual vision backbone for medical evidence.</h3>
+        <p class="pillar__body">
+          BiomedCLIP provides domain-aligned features; DINOv3 provides
+          self-supervised global structure. Both encoders stay frozen — only a small
+          trainable projection head bridges them to the language stack, keeping
+          training tractable on a single T4.
+        </p>
+        <ul class="pillar__list">
+          <li>BiomedCLIP ViT-B/16 (frozen) · 224×224 input</li>
+          <li>DINOv3 ViT-S/16 (frozen) · self-supervised general features</li>
+          <li>Trainable <code>dim_proj</code> · 384 → 768</li>
+        </ul>
+      </article>
+
+      <article class="pillar reveal" style="--delay: 0.34s">
+        <p class="pillar__index">iii.</p>
+        <h3 class="pillar__title">Clinical-token priority for what matters.</h3>
+        <p class="pillar__body">
+          Standard cross-entropy weights every token equally. CTPL identifies
+          the top-1500 clinically meaningful Vietnamese tokens
+          (anatomy, pathology, negators) and up-weights them by
+          <code>w<sub>clin</sub> = 1.8</code> during training,
+          so the loss is paying attention to the same words a radiologist would.
+        </p>
+        <ul class="pillar__list">
+          <li>Clinical-Token Priority Loss (novel contribution)</li>
+          <li>Label smoothing <code>ε = 0.05</code></li>
+          <li>MSCAv2: 3 layers × 8 heads × dim 256</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS-->
+<section id="results" class="section section--paper">
+  <div class="section__inner">
+    <header class="section__head reveal">
+      <p class="section__kicker">03 — Results</p>
+      <h2 class="section__title">
+        Across every metric on the 800-sample held-out test set,
+        our 3B-parameter system beats every published baseline.
+      </h2>
+      <p class="section__sub">
+        Zero-shot baselines evaluated under identical Vietnamese prompts and greedy decoding.
+        Our system uses the same protocol; the rightmost column shows beam-4 decoding.
+      </p>
+    </header>
+
+    <!-- Animated comparison chart -->
+    <div class="chart reveal" style="--delay: 0.18s" id="chart">
+      <div class="chart__legend">
+        <span class="chart__legend-item chart__legend-item--ours"><i></i>Our model</span>
+        <span class="chart__legend-item chart__legend-item--qwen"><i></i>Qwen2.5-VL-3B</span>
+        <span class="chart__legend-item chart__legend-item--intern"><i></i>InternVL3-2B</span>
+        <span class="chart__legend-item chart__legend-item--gemma"><i></i>Gemma-3-4B</span>
+      </div>
+
+      <div class="chart__rows">
+        <!-- Each row: one metric -->
+        <!-- ROUGE-L -->
+        <div class="chart__row">
+          <p class="chart__metric">ROUGE-L</p>
+          <div class="chart__bars">
+            <div class="chart__bar chart__bar--ours"   data-value="53.56" style="--w: 53.56%"><span>53.56</span></div>
+            <div class="chart__bar chart__bar--qwen"   data-value="41.34" style="--w: 41.34%"><span>41.34</span></div>
+            <div class="chart__bar chart__bar--intern" data-value="41.56" style="--w: 41.56%"><span>41.56</span></div>
+            <div class="chart__bar chart__bar--gemma"  data-value="38.12" style="--w: 38.12%"><span>38.12</span></div>
+          </div>
+        </div>
+        <!-- BLEU-4 -->
+        <div class="chart__row">
+          <p class="chart__metric">BLEU-4</p>
+          <div class="chart__bars">
+            <div class="chart__bar chart__bar--ours"   data-value="24.65" style="--w: 24.65%"><span>24.65</span></div>
+            <div class="chart__bar chart__bar--qwen"   data-value="12.68" style="--w: 12.68%"><span>12.68</span></div>
+            <div class="chart__bar chart__bar--intern" data-value="12.57" style="--w: 12.57%"><span>12.57</span></div>
+            <div class="chart__bar chart__bar--gemma"  data-value="9.78"  style="--w: 9.78%"><span>9.78</span></div>
+          </div>
+        </div>
+        <!-- MDR -->
+        <div class="chart__row">
+          <p class="chart__metric">MDR</p>
+          <div class="chart__bars">
+            <div class="chart__bar chart__bar--ours"   data-value="64.58" style="--w: 64.58%"><span>64.58</span></div>
+            <div class="chart__bar chart__bar--qwen"   data-value="52.88" style="--w: 52.88%"><span>52.88</span></div>
+            <div class="chart__bar chart__bar--intern" data-value="48.40" style="--w: 48.40%"><span>48.40</span></div>
+            <div class="chart__bar chart__bar--gemma"  data-value="46.62" style="--w: 46.62%"><span>46.62</span></div>
+          </div>
+        </div>
+        <!-- Token Acc -->
+        <div class="chart__row">
+          <p class="chart__metric">Token Acc.</p>
+          <div class="chart__bars">
+            <div class="chart__bar chart__bar--ours"   data-value="45.60" style="--w: 45.60%"><span>45.60</span></div>
+            <div class="chart__bar chart__bar--qwen"   data-value="35.07" style="--w: 35.07%"><span>35.07</span></div>
+            <div class="chart__bar chart__bar--intern" data-value="31.51" style="--w: 31.51%"><span>31.51</span></div>
+            <div class="chart__bar chart__bar--gemma"  data-value="29.96" style="--w: 29.96%"><span>29.96</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="chart__footnote">
+        All values are percentages or ratios scaled to a 0–100 axis. Table 3 of the report.
+      </p>
+    </div>
+
+    <!-- Ablation study -->
+    <div class="ablation reveal" style="--delay: 0.30s">
+      <header class="ablation__head">
+        <h3 class="ablation__title">Ablation — what each component contributes</h3>
+        <p class="ablation__sub">
+          Validation split, 6 epochs, identical hyperparameters except the variable under test.
+        </p>
+      </header>
+      <table class="ablation__table">
+        <thead>
+          <tr>
+            <th>Variant</th>
+            <th>Vision encoder</th>
+            <th>Text pipeline</th>
+            <th>LoRA</th>
+            <th>Token-F1</th>
+            <th>ROUGE-L</th>
+            <th>BLEU-4</th>
+            <th>MDR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>E0</td><td>BiomedCLIP</td><td>—</td><td>—</td>
+              <td>48.09</td><td>51.99</td><td>24.11</td><td>63.25</td></tr>
+          <tr><td>E1</td><td>+ DINOv3</td><td>—</td><td>—</td>
+              <td>45.00</td><td>49.69</td><td>22.06</td><td>60.51</td></tr>
+          <tr><td>E2</td><td>BiomedCLIP</td><td>—</td><td>✓</td>
+              <td>48.78</td><td>52.54</td><td>24.26</td><td><strong>63.36</strong></td></tr>
+          <tr class="ablation__row--ours">
+            <td>E3</td><td><strong>BiomedCLIP + DINOv3</strong></td><td><strong>✓</strong></td><td><strong>✓</strong></td>
+            <td><strong>49.18</strong></td><td><strong>53.06</strong></td><td><strong>24.90</strong></td><td>62.73</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="ablation__insight">
+        The text pipeline (Vietnamese-aware re-segmentation + augmentation) is the single
+        largest driver of measured gains. Dual vision is <em>necessary but not sufficient</em>:
+        adding DINOv3 without the text pipeline actually <em>decreases</em> ROUGE-L (E1 vs E0).
+        The components are <strong>multiplicative</strong>, not additive.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- SAMPLE PREDICTIONS -->
+<section id="samples" class="section section--paper section--bordered">
+  <div class="section__inner">
+    <header class="section__head reveal">
+      <p class="section__kicker">04 — Predictions</p>
+      <h2 class="section__title">
+        Six predictions from the held-out test set — never seen during training.
+      </h2>
+      <p class="section__sub">
+        Each panel pairs the input chest X-ray with the Vietnamese question, the radiologist&rsquo;s
+        reference answer (green) and our model&rsquo;s prediction (red), plus per-sample ROUGE-L,
+        Token-F1, and MDR.
+      </p>
+    </header>
+
+    <figure class="samples reveal" style="--delay: 0.18s">
+      <div class="samples__frame">
+        <img src="assets/predictions.jpg" alt="Six sample predictions from the held-out test set: chest X-rays paired with Vietnamese clinical questions, reference answers, model predictions, and per-sample metrics.">
+      </div>
+      <figcaption class="samples__caption">
+        <span class="samples__caption-num">Figure 4</span>
+        Free-form generation captures clinical intent across diverse query types —
+        from binary screening (&ldquo;is there evidence of pleural effusion?&rdquo;) to
+        localization (&ldquo;where is the consolidation?&rdquo;) to descriptive
+        impressions (&ldquo;what does the report say about the heart size?&rdquo;).
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+
+<!-- REPRODUCIBILITY-->
+<section id="reproduce" class="section section--dark">
+  <div class="section__inner">
+    <header class="section__head reveal">
+      <p class="section__kicker section__kicker--inverted">05 — Reproducibility</p>
+      <h2 class="section__title section__title--inverted">
+        Trained on one T4 GPU, 12 epochs. Every hyperparameter accounted for.
+      </h2>
+      <p class="section__sub section__sub--inverted">
+        Source notebooks, hyperparameter table, and training environment details will be
+        released alongside the published paper.
+      </p>
+    </header>
+
+    <div class="hpgrid reveal" style="--delay: 0.18s">
+      <!-- Card 1: Architecture -->
+      <article class="hpcard">
+        <p class="hpcard__head">Architecture</p>
+        <dl class="hpcard__list">
+          <div><dt>Visual encoders</dt><dd>BiomedCLIP ViT-B/16 + DINOv3 ViT-S/16</dd></div>
+          <div><dt>Question encoder</dt><dd>ViHealthBERT (Vietnamese clinical)</dd></div>
+          <div><dt>LLM backbone</dt><dd>Qwen2.5-3B-Instruct, 4-bit NF4</dd></div>
+          <div><dt>MSCA</dt><dd>3 layers · 8 heads · dim 256</dd></div>
+          <div><dt>MSCA pool</dt><dd>Conv1D kernel 4 / stride 4 → 32 tokens</dd></div>
+        </dl>
+      </article>
+
+      <!-- Card 2: Input -->
+      <article class="hpcard">
+        <p class="hpcard__head">Input</p>
+        <dl class="hpcard__list">
+          <div><dt>Image size</dt><dd>224 × 224 px</dd></div>
+          <div><dt>Augmentations</dt><dd>LongestMaxSize, PadIfNeeded, Rotate ±3°, BrightnessContrast ±10 %, CLAHE, GaussNoise</dd></div>
+          <div><dt>Token limits</dt><dd>Q ≤ 128 · A ≤ 128</dd></div>
+          <div><dt>TAM input layout</dt><dd>[Visual 32 | Q 128 | A 128] = 288 tokens</dd></div>
+        </dl>
+      </article>
+
+      <!-- Card 3: PEFT -->
+      <article class="hpcard">
+        <p class="hpcard__head">PEFT</p>
+        <dl class="hpcard__list">
+          <div><dt>QEM LoRA</dt><dd>r = 8 · α = 16 · dropout 0.15 · q,k,v</dd></div>
+          <div><dt>TAM LoRA</dt><dd>r = 8 · α = 16 · dropout 0.05</dd></div>
+          <div><dt>TAM targets</dt><dd>q,k,v,o,gate,up,down projections</dd></div>
+        </dl>
+      </article>
+
+      <!-- Card 4: Optimization -->
+      <article class="hpcard">
+        <p class="hpcard__head">Optimization</p>
+        <dl class="hpcard__list">
+          <div><dt>Optimizer</dt><dd>8-bit Paged AdamW · WD 0.05</dd></div>
+          <div><dt>Peak LR (continuation)</dt><dd>MSCA 1.5e<sup>−4</sup> · Proj 2.4e<sup>−5</sup> · LoRA 1.2e<sup>−5</sup></dd></div>
+          <div><dt>Scheduler</dt><dd>OneCycleLR · pct 0.10 · div 5 · final 50</dd></div>
+          <div><dt>CTPL</dt><dd>w<sub>clin</sub> = 1.8 · smoothing ε = 0.05</dd></div>
+          <div><dt>CTPL vocab</dt><dd>Top 1500 words, length ≥ 5</dd></div>
+        </dl>
+      </article>
+
+      <!-- Card 5: Training -->
+      <article class="hpcard">
+        <p class="hpcard__head">Training</p>
+        <dl class="hpcard__list">
+          <div><dt>Epochs</dt><dd>12 (6 + 6 continuation, decayed LR)</dd></div>
+          <div><dt>Batch</dt><dd>8 × grad-accum 3 = effective 24</dd></div>
+          <div><dt>Precision</dt><dd>Mixed FP16 + PyTorch GradScaler</dd></div>
+          <div><dt>Eval</dt><dd>100 / epoch (fast) · 800 (full)</dd></div>
+          <div><dt>Hardware · seed</dt><dd>Single NVIDIA T4 (16 GB) · seed 42</dd></div>
+        </dl>
+      </article>
+
+      <!-- Card 6: Data -->
+      <article class="hpcard">
+        <p class="hpcard__head">Data</p>
+        <dl class="hpcard__list">
+          <div><dt>Source</dt><dd>VQA-RAD + MIMIC-CXR</dd></div>
+          <div><dt>Translation</dt><dd>GPT-4o, radiology-expert prompt + term mapping</dd></div>
+          <div><dt>Size</dt><dd>8,000 Q–A pairs</dd></div>
+          <div><dt>Splits</dt><dd>80 / 10 / 10 (6400 / 800 / 800)</dd></div>
+          <div><dt>Stratification</dt><dd>by source dataset</dd></div>
+        </dl>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── AUTHORS / FOOTER ───────────────────────────────────────────── -->
+<footer id="contact" class="footer">
+  <div class="footer__inner">
+    <div class="footer__authors">
+      <p class="footer__kicker">Authors</p>
+      <div class="footer__author-grid">
+        <div class="footer__author">
+          <p class="footer__author-name">Tran Thi The Nhan</p>
+          <p class="footer__author-meta">Lead author · Data pipeline, modeling, experiments, report</p>
+          <p class="footer__author-link">
+            <a href="https://hoo.be/verisbabythenhan" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+              </svg>
+              <span>hoo.be/verisbabythenhan</span>
+              <svg class="footer__author-link-out" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M7 17L17 7M7 7h10v10"/>
+              </svg>
+            </a>
+          </p>
+        </div>
+        <div class="footer__author">
+          <p class="footer__author-name">Nguyen Phuc Minh Dang</p>
+          <p class="footer__author-meta">Co-author · Basic text pre-processing, dataset translation</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__citation" id="paper">
+      <p class="footer__kicker">Cite as</p>
+      <pre class="footer__bib"><code>@misc{tran2026vietmedvqa,
+  title  = {Advancing Vietnamese Visual Question Answering (VQA) for Healthcare},
+  author = {Tran, Thi The Nhan and Nguyen, Phuc Minh Dang},
+  year   = {2026},
+  note   = {Undergraduate IT Project, Ton Duc Thang University},
+  url    = {https://vietnamese-medvqa.example.com}
+}</code></pre>
+      <button class="footer__copy" data-copy-target="bib">Copy BibTeX</button>
+    </div>
+
+    <div class="footer__bottom">
+      <p>© 2026 Tran Thi The Nhan & Nguyen Phuc Minh Dang.</p>
+      <p>Built at <span class="footer__institution">Ton Duc Thang University</span> · Faculty of Information Technology</p>
+    </div>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
