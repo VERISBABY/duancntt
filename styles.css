@@ -1,10 +1,4 @@
-/* ===========================================================================
-   Vietnamese Medical VQA — site styles
-   Design system: medical/clinical, paper-like, deep navy + warm paper.
-   No purple gradients, no generic system fonts, no "modern startup" tropes.
-   =========================================================================== */
-
-/* ── 1. Design tokens ──────────────────────────────────────────────────── */
+/* 1. Design tokens*/
 :root {
   /* Colors */
   --paper:           #FBFAF7;         /* warm off-white — main background    */
@@ -43,7 +37,15 @@
 
 /* ── 2. Reset / base ───────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* Prevent any descendant (e.g. off-canvas drawer parked at translateX(100%))
+     from creating horizontal scroll. overflow-x: clip is the modern, well-supported
+     primitive for this; we fall back to hidden for older engines. */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
 body {
   margin: 0;
   background: var(--paper);
@@ -54,6 +56,8 @@ body {
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 img { max-width: 100%; display: block; }
 a { color: inherit; }
@@ -103,6 +107,11 @@ code {
 
 /* ===========================================================================
    NAV
+   ---------------------------------------------------------------------------
+   Desktop: brand · links inline · CTA pinned right.
+   Mobile (≤ 920 px): brand · hamburger button right; links slide in from the
+   right edge as a clean drawer over a soft backdrop. Body scroll-lock is
+   handled in app.js by toggling .nav--open on <body>.
    =========================================================================== */
 .nav {
   position: fixed;
@@ -184,9 +193,165 @@ code {
 }
 .nav__cta:hover { background: var(--ink); color: var(--paper); }
 
+/* ── Language toggle (desktop position: between menu and CTA) ───────── */
+.nav__lang {
+  /* Sits between the menu links and the CTA on desktop. Subtle by default —
+     a thin pill that lights up on hover. The label is always the OTHER
+     language (so users see where they'll go, not where they are). */
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: .42rem .9rem;
+  font-family: var(--f-sans);
+  font-size: .8rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  letter-spacing: .01em;
+  cursor: pointer;
+  transition: border-color .25s var(--ease), color .25s var(--ease),
+              background .25s var(--ease);
+}
+.nav__lang:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.nav__lang:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Hamburger button (mobile only) ──────────────────────────────────── */
+.nav__toggle {
+  display: none;                       /* hidden by default, shown on mobile */
+  margin-left: auto;
+  width: 44px; height: 44px;           /* ≥44px tap target per WCAG 2.5.5 */
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 5px;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0;
+  cursor: pointer;
+  transition: border-color .25s var(--ease), background .25s var(--ease);
+}
+.nav__toggle:hover { border-color: var(--ink); }
+.nav__toggle-bar {
+  display: block;
+  width: 18px; height: 1.5px;
+  background: var(--ink);
+  border-radius: 1px;
+  transition: transform .3s var(--ease), opacity .25s var(--ease);
+  transform-origin: center;
+}
+/* When body has .nav--open the three bars morph into an X */
+body.nav--open .nav__toggle-bar:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+body.nav--open .nav__toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+body.nav--open .nav__toggle-bar:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ── Backdrop (mobile only) ──────────────────────────────────────────── */
+.nav__backdrop {
+  position: fixed;
+  inset: 0;
+  height: 100vh;                         /* explicit — same reason as drawer */
+  background: rgba(15, 44, 68, .5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s var(--ease);
+  z-index: 49;                          /* one below .nav */
+}
+body.nav--open .nav__backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/* ── Mobile layout: hamburger + slide-in drawer ──────────────────────── */
 @media (max-width: 920px) {
-  .nav__links { display: none; }
-  .nav__cta { margin-left: auto; }
+  .nav__toggle { display: flex; }       /* reveal hamburger */
+
+  /* Drawer: an off-canvas panel that slides in from the right edge.
+     We animate the `right` property rather than `transform: translateX(...)`
+     because a non-`none` transform on a fixed-positioned element makes
+     itself the containing block for `top/right/bottom/left`, which would
+     collapse the drawer to its content height. Animating `right` keeps
+     the viewport as the containing block. */
+  .nav__links {
+    position: fixed;
+    top: 0;
+    right: -100vw;                      /* parked off-screen to the right */
+    bottom: 0;
+    height: 100vh;                      /* explicit — sidesteps top/bottom auto-sizing edge cases */
+    width: min(82vw, 320px);
+    flex-direction: column;
+    gap: 0;
+    padding: 5.5rem 2rem 2rem;          /* clear the brand row */
+    background: var(--paper);
+    border-left: 1px solid var(--rule-soft);
+    box-shadow: -12px 0 40px -20px rgba(15, 44, 68, .15);
+    transition: right .38s var(--ease);
+    overflow-y: auto;
+    font-size: 1rem;                    /* easier to tap */
+    z-index: 60;                        /* above backdrop */
+    display: flex;                      /* override the 920-cut display:none */
+  }
+  body.nav--open .nav__links { right: 0; }
+
+  .nav__links li {
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .nav__links li:last-of-type { border-bottom: 0; }
+  .nav__links a {
+    display: block;
+    padding: 1rem 0;                    /* big tap target */
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-size: 1.15rem;
+    color: var(--ink);
+    letter-spacing: -.005em;
+  }
+  /* Hide the desktop underline; drawer rows already have a bottom border */
+  .nav__links a::after { display: none; }
+
+  /* CTA on mobile: app.js relocates it inside the drawer so it sits
+     at the bottom of the menu list rather than the always-on bar. */
+  .nav__cta {
+    display: none;
+  }
+  /* When app.js sets data-in-drawer="true" on the CTA, show it as a styled
+     full-width tap target inside the drawer. */
+  .nav__cta[data-in-drawer="true"] {
+    display: block;
+    margin: 1.5rem 0 0;
+    text-align: center;
+    padding: .95rem 1rem;
+    font-size: 1rem;
+    border-color: var(--ink);
+  }
+
+  /* Language toggle: hide from the nav bar on mobile (alongside CTA),
+     and when app.js puts it in the drawer, style it as a clear option
+     between the nav links and the citation CTA. */
+  .nav__lang {
+    display: none;
+  }
+  .nav__lang[data-in-drawer="true"] {
+    display: block;
+    margin: 1rem 0 0;
+    padding: .85rem 1rem;
+    width: 100%;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: var(--ink);
+  }
 }
 
 
@@ -411,7 +576,7 @@ code {
   text-transform: uppercase;
   font-weight: 500;
   color: var(--ink-mute);
-  margin: 0 0 2.5rem;
+  margin: 0 0 1.5rem;
 }
 .hero__eyebrow-dot {
   width: 8px; height: 8px;
@@ -449,7 +614,7 @@ code {
   margin: 2rem 0 0;
   font-size: clamp(1.05rem, 1.3vw, 1.25rem);
   line-height: 1.55;
-  max-width: 65ch;
+  max-width: 75ch;
   color: var(--ink-soft);
 }
 .hero__lede strong {
@@ -792,8 +957,9 @@ code {
    Two cards on desktop, stacking to one column on tablets and below.
    ─────────────────────────────────────────────────────────────────────── */
 .detail-figures {
+  /* auto-fit: full-width if one child remains, 2 columns when two are present */
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
   gap: clamp(1.5rem, 3vw, 2.5rem);
   margin: 0 0 4.5rem;
 }
@@ -942,6 +1108,289 @@ code {
 
 
 /* ===========================================================================
+   §03 DATA PROCESSING
+   ---------------------------------------------------------------------------
+   On a paper background. Two stacked sub-blocks (image, text), each with
+   a kicker / title / figure. The text block additionally includes a
+   responsive grid of six before-and-after example cards.
+   =========================================================================== */
+
+/* ── Sub-block wrapper (image / text) ─────────────────────────────────── */
+.dataproc-block {
+  margin-top: clamp(2.5rem, 5vh, 4rem);
+  padding-top: clamp(2rem, 4vh, 3rem);
+  border-top: 1px solid var(--rule-soft);
+}
+.dataproc-block:first-of-type {
+  /* First block hugs the section header — no extra rule above it */
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.dataproc-block__head {
+  max-width: 78ch;
+  margin-bottom: clamp(1.6rem, 3vh, 2.4rem);
+}
+.dataproc-block__kicker {
+  margin: 0 0 .9rem;
+  font-family: var(--f-mono);
+  font-size: .72rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 500;
+}
+.dataproc-block__title {
+  margin: 0 0 1rem;
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+  line-height: 1.2;
+  letter-spacing: -.015em;
+  color: var(--ink);
+}
+.dataproc-block__title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ink-soft);
+}
+.dataproc-block__lede {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+.dataproc-block__lede strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ── Figure card (used for both im_sample.png and textprocessing.png) ─ */
+.dataproc-figure {
+  margin: 0 0 1.5rem;
+}
+.dataproc-figure__frame {
+  position: relative;
+  background: var(--paper-deep);
+  padding: clamp(1rem, 2.4vw, 2rem);
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+}
+.dataproc-figure__frame img {
+  width: 100%;
+  display: block;
+  border-radius: 1px;
+}
+/* Tiny corner ticks consistent with the X-ray frame in the hero / IEM */
+.dataproc-figure__frame::before,
+.dataproc-figure__frame::after {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  border: 1px solid var(--accent);
+}
+.dataproc-figure__frame::before { top: -1px; left: -1px;   border-right: 0; border-bottom: 0; }
+.dataproc-figure__frame::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+
+/* Pipeline-diagram variant: the textprocessing.png is wide & schematic;
+   constrain its width so it doesn't dominate above the example grid. */
+.dataproc-figure--diagram .dataproc-figure__frame {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.dataproc-figure__caption {
+  margin: 1rem 0 0;
+  font-size: .92rem;
+  line-height: 1.6;
+  color: var(--ink-mute);
+  max-width: 78ch;
+}
+.dataproc-figure__caption strong {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.dataproc-figure__num {
+  display: inline-block;
+  margin-right: .55rem;
+  padding: .12em .55em;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  vertical-align: 2px;
+}
+
+/* ── Text examples sub-section ────────────────────────────────────────── */
+.textcases {
+  margin-top: clamp(2rem, 4vh, 3.2rem);
+}
+.textcases__head {
+  margin-bottom: clamp(1.4rem, 3vh, 2rem);
+  max-width: 78ch;
+}
+.textcases__title {
+  margin: 0 0 .8rem;
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+  line-height: 1.3;
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
+.textcases__sub {
+  margin: 0;
+  font-size: .94rem;
+  line-height: 1.65;
+  color: var(--ink-mute);
+}
+.textcases__sub code {
+  font-size: .88em;
+}
+
+/* Grid: 3 columns on wide desktops, auto-fit to fewer on smaller viewports */
+.textcases__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: clamp(1rem, 2vw, 1.4rem);
+}
+
+/* ── Individual before / after card ──────────────────────────────────── */
+.textcase {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  border-radius: 3px;
+  padding: 1.4rem 1.4rem 1.3rem;
+  transition: border-color .25s var(--ease), transform .25s var(--ease),
+              box-shadow .25s var(--ease);
+}
+.textcase:hover {
+  border-color: var(--ink-mute);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px -10px rgba(15, 44, 68, .25);
+}
+
+/* Category-pill tag. Three semantic variants:
+     --act  : the pipeline actively transformed the text (red accent)
+     --keep : the pipeline preserved a foreign acronym + bound it (teal)
+     --idle : the pipeline correctly did nothing (muted gray)            */
+.textcase__tag {
+  align-self: flex-start;
+  margin: 0 0 1rem;
+  padding: .25em .7em;
+  font-family: var(--f-mono);
+  font-size: .68rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border-radius: 999px;
+  background: rgba(199, 62, 62, .08);
+  color: var(--accent);
+  border: 1px solid rgba(199, 62, 62, .25);
+}
+.textcase__tag--act {
+  background: rgba(199, 62, 62, .08);
+  color: var(--accent);
+  border-color: rgba(199, 62, 62, .25);
+}
+.textcase__tag--keep {
+  background: rgba(44, 110, 107, .08);
+  color: var(--teal);
+  border-color: rgba(44, 110, 107, .25);
+}
+.textcase__tag--idle {
+  background: rgba(107, 127, 144, .08);
+  color: var(--ink-mute);
+  border-color: rgba(107, 127, 144, .25);
+}
+
+/* The before/after pair, with raw on top and processed below */
+.textcase__pair {
+  margin: 0 0 1rem;
+}
+.textcase__label {
+  margin: 0 0 .25rem;
+  font-family: var(--f-mono);
+  font-size: .65rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.textcase__label--out { color: var(--ink); }
+
+.textcase__text {
+  margin: 0 0 .85rem;
+  padding: .6rem .8rem;
+  background: rgba(15, 44, 68, .03);
+  border-left: 2px solid var(--rule);
+  font-size: .92rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  font-family: var(--f-sans);
+  word-break: break-word;
+  border-radius: 0 2px 2px 0;
+}
+/* The "after" line uses stronger ink and a colored stripe to draw the eye */
+.textcase__text--out {
+  background: rgba(15, 44, 68, .045);
+  border-left-color: var(--accent);
+  color: var(--ink);
+  font-weight: 500;
+}
+/* Idle variant tones down the "after" stripe — no transformation happened */
+.textcase__tag--idle ~ .textcase__pair .textcase__text--out {
+  border-left-color: var(--ink-mute);
+}
+/* Keep variant uses teal */
+.textcase__tag--keep ~ .textcase__pair .textcase__text--out {
+  border-left-color: var(--teal);
+}
+
+/* The arrow between raw and processed — small, subtle, decorative */
+.textcase__arrow {
+  margin: 0 0 .35rem;
+  font-size: .85rem;
+  line-height: 1;
+  color: var(--ink-mute);
+  text-align: center;
+  letter-spacing: .2em;
+}
+
+/* Note under the pair — explains which technique fired */
+.textcase__note {
+  margin: 0;
+  padding-top: .85rem;
+  border-top: 1px dashed var(--rule-soft);
+  font-size: .85rem;
+  line-height: 1.55;
+  color: var(--ink-mute);
+}
+.textcase__note strong {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.textcase__note code {
+  font-size: .82em;
+  background: rgba(15, 44, 68, .06);
+  color: var(--ink-soft);
+  padding: .08em .3em;
+}
+
+/* ── Responsive: collapse to a single column at narrow widths ────────── */
+@media (max-width: 720px) {
+  .dataproc-block { margin-top: 2rem; padding-top: 2rem; }
+  .textcases__grid { grid-template-columns: 1fr; }
+}
+
+
+/* ===========================================================================
    RESULTS — comparison chart
    =========================================================================== */
 .chart {
@@ -1052,8 +1501,23 @@ code {
 }
 
 @media (max-width: 720px) {
-  .chart__row { grid-template-columns: 1fr; gap: .5rem; }
-  .chart__metric { text-align: left; }
+  /* Stack: metric label sits above its own bar group rather than beside it */
+  .chart__row { grid-template-columns: 1fr; gap: .55rem; }
+  .chart__metric {
+    text-align: left;
+    font-size: .78rem;
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule-soft);
+    padding-bottom: .35rem;
+  }
+  /* Bars: shorter, plus a sensible minimum so the value label remains
+     readable even on the narrowest comparison columns (~38 % of width). */
+  .chart__bar {
+    height: 20px;
+    min-width: 56px;                    /* fit "XX.XX" label without clipping */
+    font-size: .68rem;
+  }
+  .chart__legend { gap: .8rem .9rem; row-gap: .6rem; font-size: .72rem; }
 }
 
 
@@ -1165,6 +1629,52 @@ code {
   border-bottom: 1px solid var(--accent);
   border-right: 1px solid var(--accent);
 }
+
+/* ── Horizontal-scroll wrapper for the wide 6-panel image ──────────────
+   On desktop the image fits naturally — wrapper is inert.
+   On mobile (≤720 px) we force the image to stay at a readable minimum
+   width and let the user pan horizontally with finger / scrollbar.
+   The native scrollbar is hidden in favour of a typographic hint below. */
+.samples__scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+.samples__scroll img {
+  width: 100%;
+  display: block;
+  border-radius: 1px;
+}
+.samples__scroll::-webkit-scrollbar { height: 6px; }
+.samples__scroll::-webkit-scrollbar-track { background: transparent; }
+.samples__scroll::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+/* The swipe-to-view hint — hidden on desktop, visible on mobile */
+.samples__hint {
+  display: none;
+  margin: .7rem 0 0;
+  padding: 0;
+  font-family: var(--f-mono);
+  font-size: .7rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+.samples__hint-arrow {
+  display: inline-block;
+  animation: samples-hint-pulse 1.6s ease-in-out infinite;
+}
+@keyframes samples-hint-pulse {
+  0%, 100% { transform: translateX(0);   opacity: .6; }
+  50%      { transform: translateX(6px); opacity: 1;  }
+}
+
 .samples__caption {
   margin: 1.2rem 0 0;
   font-size: .92rem;
@@ -1180,6 +1690,13 @@ code {
   font-style: normal;
   color: var(--ink-soft);
   letter-spacing: .04em;
+}
+
+/* On mobile only: enforce min image width so each of the 6 panels stays
+   legible, and reveal the swipe hint. */
+@media (max-width: 720px) {
+  .samples__scroll img { width: auto; min-width: 1100px; height: auto; }
+  .samples__hint { display: flex; }
 }
 
 
@@ -1373,11 +1890,144 @@ code {
 
 
 /* ===========================================================================
-   PRINT
+   CURSOR EFFECTS — desktop only
+   ---------------------------------------------------------------------------
+   Two coordinated effects driven by --mx / --my CSS variables that app.js
+   updates inside a single requestAnimationFrame loop:
+
+     1. .cursor-spotlight     A large, soft warm radial gradient that follows
+                              the cursor like a reading-light. Fixed to the
+                              viewport, blended into the page colors.
+     2. [data-tilt]           Elements that respond to local cursor position
+                              with a subtle 3-D perspective tilt. Used on the
+                              hero X-ray frame to evoke handling a specimen.
+
+   Both effects are disabled on touch devices (no :hover capability) and when
+   prefers-reduced-motion is set.
    =========================================================================== */
+
+/* Default state of the position variables. app.js overwrites these every
+   frame while the cursor moves over the document. The fallback (centered
+   off-viewport-top) keeps the spotlight invisible until first move. */
+:root {
+  --mx: 50vw;
+  --my: -50vh;        /* off-screen by default */
+}
+
+.cursor-spotlight {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;                            /* above content, below nav (50) */
+  /* A large soft-edged radial gradient using a navy/ink tint that
+     contrasts directly with the warm paper background. We use
+     `mix-blend-mode: multiply` so the gradient darkens whatever sits
+     beneath, producing a clear visible "reading-light" halo without
+     washing out the typography. Stronger opacity than the previous
+     cream variant — visible on both light and dark sections. */
+  background: radial-gradient(
+    520px circle at var(--mx) var(--my),
+    rgba(15, 44, 68, .18) 0%,
+    rgba(15, 44, 68, .10) 28%,
+    rgba(15, 44, 68, .04) 50%,
+    transparent 68%
+  );
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transition: opacity .5s var(--ease);
+}
+/* Body class toggled by JS once mouse has actually moved on the page;
+   this prevents a flash of effect on initial load. */
+body.cursor-ready .cursor-spotlight { opacity: 1; }
+
+
+/* ── 3-D tilt elements ────────────────────────────────────────────────── */
+[data-tilt] {
+  --tilt-rx: 0deg;        /* rotateX — set by JS */
+  --tilt-ry: 0deg;        /* rotateY — set by JS */
+  transform: perspective(900px)
+             rotateX(var(--tilt-rx))
+             rotateY(var(--tilt-ry));
+  transform-style: preserve-3d;
+  transition: transform .35s cubic-bezier(.2, .6, .2, 1);
+  will-change: transform;
+}
+/* While the cursor is actively over a tilt target, JS adds .is-tilting and
+   we drop the transition so motion feels 1-to-1 with the pointer. */
+[data-tilt].is-tilting {
+  transition: transform .08s linear;
+}
+
+/* Touch & reduced-motion fallbacks — kill both effects entirely. */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .cursor-spotlight { display: none; }
+  [data-tilt] {
+    transform: none;
+    transition: none;
+  }
+}
+
+
+/* ===========================================================================
+   GENERAL MOBILE POLISH
+   ---------------------------------------------------------------------------
+   Tighter gutters, smaller section padding, larger tap targets, and a few
+   targeted overrides that the per-component breakpoints above didn't catch.
+   =========================================================================== */
+@media (max-width: 720px) {
+  :root {
+    --gutter: 1.25rem;
+    --section-pad-y: 3.5rem;
+  }
+
+  /* Body lock when the mobile drawer is open */
+  body.nav--open { overflow: hidden; }
+
+  /* Hero title: tighten the title block so it never wraps to 6+ lines */
+  .hero__title { font-size: clamp(2.1rem, 9vw, 3rem); line-height: 1.1; }
+  .hero__lede  { font-size: .98rem; }
+  .hero__authors { gap: .8rem; }
+  .hero__author-sep { display: none; }
+
+  /* Section heading is wide on tablets/desktop; constrain on phones */
+  .section__title { font-size: clamp(1.5rem, 6.5vw, 2rem); }
+  .section__sub, .section__prose { font-size: .95rem; }
+
+  /* The hero rule with em text wraps oddly on narrow screens */
+  .hero__rule { font-size: .68rem; }
+
+  /* Detail-figure (IEM) padding tighter to keep the wide diagram readable */
+  .detail-figure { padding: 1.1rem 1rem 1.3rem; }
+  .detail-figure__title { font-size: 1.15rem; }
+
+  /* Dataproc-block: tighter heading sizes */
+  .dataproc-block__title { font-size: 1.3rem; }
+  .dataproc-block__lede  { font-size: .94rem; }
+  .dataproc-figure__caption { font-size: .85rem; }
+
+  /* Text-case cards: a bit less padding for narrow viewports */
+  .textcase { padding: 1.1rem 1.1rem 1rem; }
+  .textcase__text { font-size: .86rem; }
+  .textcase__note { font-size: .8rem; }
+
+  /* Footer */
+  .footer__bottom { flex-direction: column; gap: .35rem; align-items: flex-start; }
+  .footer__bib    { font-size: .76rem; padding: 1.1rem 1.1rem; }
+  .footer__copy   { width: 100%; }
+}
+
+/* Extra-narrow phones (≤ 380 px): one more level of compression */
+@media (max-width: 380px) {
+  .nav__brand-text { display: none; }    /* keep just the mark to save space */
+  .hero__title  { font-size: 2rem; }
+  .hero__eyebrow { font-size: .68rem; }
+}
+
 @media print {
-  .nav, .hero__grid-overlay, .footer__copy { display: none; }
+  .nav, .hero__grid-overlay, .footer__copy,
+  .cursor-spotlight, .samples__hint, .nav__backdrop { display: none; }
   body { background: white; color: black; }
   .section--dark { background: white; color: black; }
   .section--dark * { color: black !important; }
+  [data-tilt] { transform: none !important; }
 }
