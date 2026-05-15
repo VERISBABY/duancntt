@@ -198,8 +198,8 @@
 
     /* Section 05 — Predictions */
     'samples.kicker':    { en: '05 — Predictions', vi: '05 — Dự đoán' },
-    'samples.title':     { en: 'Six predictions from the held-out test set — never seen during training.',
-                           vi: 'Sáu dự đoán từ tập kiểm thử — chưa từng thấy trong huấn luyện.' },
+    'samples.title':     { en: 'Six predictions from the test set (never seen during training)',
+                           vi: 'Sáu mẫu dự đoán từ tập kiểm thử (chưa dùng trong huấn luyện)' },
     'samples.sub':       { en: 'Each panel pairs the input chest X-ray with the Vietnamese question, the radiologist\u2019s reference answer (green) and our model\u2019s prediction (red), plus per-sample ROUGE-L, Token-F1, and MDR.',
                            vi: 'Mỗi khung ghép cặp ảnh X-quang ngực đầu vào với câu hỏi tiếng Việt, câu trả lời tham chiếu của bác sĩ X-quang (xanh) và câu dự đoán của mô hình (đỏ), cùng ROUGE-L, Token-F1 và MDR cho từng mẫu.' },
     'samples.scrollAria':{ en: 'Scroll horizontally to view all six prediction panels',
@@ -213,10 +213,10 @@
 
     /* Section 06 — Reproducibility */
     'repro.kicker':      { en: '06 — Reproducibility', vi: '06 — Tái lập' },
-    'repro.title':       { en: 'Trained on one T4 GPU, 12 epochs. Every hyperparameter accounted for.',
-                           vi: 'Đã huấn luyện trên một GPU T4, 12 epoch. Mọi siêu-tham-số được công bố đầy đủ.' },
-    'repro.sub':         { en: 'Source notebooks, hyperparameter table, and training environment details will be released alongside the published paper.',
-                           vi: 'Notebook nguồn, bảng siêu-tham-số và chi tiết môi trường huấn luyện sẽ được phát hành cùng bài báo công bố.' },
+    'repro.title':       { en: 'Trained on one T4 GPU, 12 epochs. Every hyper-parameter accounted for.',
+                           vi: 'Đã huấn luyện trên một GPU T4, 12 epoch. Mọi siêu tham số được công bố đầy đủ.' },
+    'repro.sub':         { en: 'Source notebooks, hyper-parameter table, and training environment details will be released alongside the published paper.',
+                           vi: 'Notebook nguồn, bảng siêu tham số và chi tiết môi trường huấn luyện sẽ được phát hành cùng bài báo công bố.' },
     'repro.archi':       { en: 'Architecture',  vi: 'Kiến trúc' },
     'repro.input':       { en: 'Input',         vi: 'Đầu vào' },
     'repro.peft':        { en: 'PEFT',          vi: 'PEFT' },
@@ -254,7 +254,7 @@
     /* Footer */
     'footer.authors':    { en: 'Authors',          vi: 'Tác giả' },
     'footer.authorMeta1':{ en: 'Lead author · Data pipeline, modeling, experiments, report',
-                           vi: 'Tác giả chính · Pipeline dữ liệu, xây mô hình, thí nghiệm, báo cáo' },
+                           vi: 'Tác giả chính · Pipeline dữ liệu, xây mô hình, thí nghiệm, viết báo cáo' },
     'footer.authorMeta2':{ en: 'Co-author · Basic text pre-processing, dataset translation',
                            vi: 'Đồng tác giả · Tiền-xử-lý văn bản cơ bản, dịch dữ liệu' },
     'footer.citeAs':     { en: 'Cite as',          vi: 'Trích dẫn dưới dạng' },
