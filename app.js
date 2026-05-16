@@ -179,17 +179,17 @@
 
     /* Section 04 — Results */
     'results.kicker':    { en: '04 — Results', vi: '04 — Kết quả' },
-    'results.title':     { en: 'Across every metric on the 800-sample held-out test set, our 3B-parameter system beats every published baseline.',
-                           vi: 'Trên mọi metric của tập kiểm-thử 800 mẫu, hệ thống 3B-tham-số của chúng tôi vượt mọi baseline đã công bố.' },
+    'results.title':     { en: 'Across every metric on the 800-sample test set, our 3B parameters system beats every published baseline.',
+                           vi: 'Trên mọi metric của tập kiểm thử 800 mẫu, hệ thống 3 tỷ tham số của chúng tôi vượt mọi baseline đã công bố.' },
     'results.sub':       { en: 'Zero-shot baselines evaluated under identical Vietnamese prompts and greedy decoding. Our system uses the same protocol; the rightmost column shows beam-4 decoding.',
                            vi: 'Các baseline zero-shot được đánh giá với prompt tiếng Việt giống hệt và giải mã tham lam. Hệ thống của chúng tôi dùng cùng giao thức; cột ngoài cùng bên phải thể hiện giải mã beam-4.' },
     'results.legendOurs':{ en: 'Our model', vi: 'Mô hình của chúng tôi' },
-    'results.chartFootnote':{ en: 'All values are percentages or ratios scaled to a 0–100 axis. Table 3 of the report.',
-                              vi: 'Tất cả các giá trị là phần trăm hoặc tỉ số đưa về trục 0–100. Bảng 3 trong báo cáo.' },
-    'results.ablationTitle':{ en: 'Ablation — what each component contributes',
-                              vi: 'Ablation — mỗi thành phần đóng góp gì' },
+    'results.chartFootnote':{ en: 'All values are percentages or ratios scaled to a 0–100 axis.',
+                              vi: 'Tất cả các giá trị là phần trăm hoặc tỉ số đưa về trục 0–100.' },
+    'results.ablationTitle':{ en: 'Ablation | what each component contributes',
+                              vi: 'Ablation | mỗi thành phần đóng góp gì' },
     'results.ablationSub':  { en: 'Validation split, 6 epochs, identical hyperparameters except the variable under test.',
-                              vi: 'Tập validation, 6 epoch, các siêu-tham-số giống hệt nhau ngoại trừ biến đang khảo sát.' },
+                              vi: 'Tập validation, 6 epoch, các siêu-tham số giống hệt nhau ngoại trừ biến đang khảo sát.' },
     'results.thVariant': { en: 'Variant',        vi: 'Biến thể' },
     'results.thVision':  { en: 'Vision encoder', vi: 'Encoder thị giác' },
     'results.thText':    { en: 'Text pipeline',  vi: 'Pipeline văn bản' },
@@ -197,7 +197,7 @@
                               vi: 'Pipeline văn bản (tách-lại hiểu-tiếng-Việt + augmentation) là động lực đơn lẻ lớn nhất tạo ra các cải thiện đo-được. Thị giác kép là <em>cần nhưng chưa đủ</em>: thêm DINOv3 mà không có pipeline văn bản thực ra <em>làm giảm</em> ROUGE-L (E1 vs E0). Các thành phần <strong>nhân lên nhau</strong>, không cộng vào nhau.' },
 
     /* Section 05 — Predictions */
-    'samples.kicker':    { en: '05 — Predictions', vi: '05 — Dự đoán' },
+    'samples.kicker':    { en: '05 — Predictions', vi: '05 — Các chuẩn đoán' },
     'samples.title':     { en: 'Six predictions from the test set (never seen during training)',
                            vi: 'Sáu mẫu dự đoán từ tập kiểm thử (chưa dùng trong huấn luyện)' },
     'samples.sub':       { en: 'Each panel pairs the input chest X-ray with the Vietnamese question, the radiologist\u2019s reference answer (green) and our model\u2019s prediction (red), plus per-sample ROUGE-L, Token-F1, and MDR.',
