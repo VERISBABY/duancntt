@@ -868,6 +868,7 @@ body.nav--open .nav__backdrop {
   padding: 2rem 1.5rem 2rem 0;
   border-right: 1px solid var(--rule-soft);
 }
+.problem-cell {color: var(--ink); font-weight: 500;}
 .problem-cell:nth-child(3) { border-right: 0; }
 .problem-cell:not(:first-child) { padding-left: 1.5rem; }
 
