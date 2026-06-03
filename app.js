@@ -252,8 +252,8 @@
 
     /* Footer */
     'footer.authors':    { en: 'Authors',          vi: 'Tác giả' },
-    'footer.authorMeta1':{ en: 'Lead author · Data pipeline, modeling, experiments, report',
-                           vi: 'Tác giả chính · Pipeline dữ liệu, xây mô hình, thí nghiệm, viết báo cáo' },
+    'footer.authorMeta1':{ en: 'Lead author · Data pipeline, fix Basic text pre-processing, modeling, experiments, report',
+                           vi: 'Tác giả chính · Pipeline dữ liệu, sửa lại Xử lý sơ bộ văn bản cơ bản, xây mô hình, thí nghiệm, viết báo cáo' },
     'footer.authorMeta2':{ en: 'Co-author · Basic text pre-processing, dataset translation',
                            vi: 'Đồng tác giả · Tiền-xử-lý văn bản cơ bản, dịch dữ liệu' },
     'footer.citeAs':     { en: 'Cite as',          vi: 'Trích dẫn dưới dạng' },
