@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  // 0. i18n DICTIONARY 
   // The translation map. Each top-level key holds two strings: one for English
   // (`en`) and one for Vietnamese (`vi`). Keys appear in DOM via the data-i18n
   // family of attributes; see applyI18n() for the lookup behaviour.
@@ -63,13 +62,13 @@
     'problem.kicker':    { en: '01 — The gap', vi: '01 — Khoảng trống' },
     'problem.title':     { en: 'Vietnamese clinicians are reading the same images as everyone else. They\u2019re asking questions in their own language. Today\u2019s medical AI barely listens.',
                            vi: 'Bác sĩ Việt Nam đọc cùng những hình ảnh như mọi nơi khác. Họ đặt câu hỏi bằng tiếng mẹ đẻ. AI y khoa hiện nay gần như không lắng nghe.' },
-    'problem.cell1':     { en: 'chest-X-ray Q–A pairs we translated from MIMIC-CXR and VQA-RAD, a combined Vietnamese dataset that has never existed before.',
+    'problem.cell1':     { en: 'chest-X-ray Q/A pairs we translated from MIMIC-CXR and VQA-RAD, a combined Vietnamese dataset that has never existed before.',
                            vi: 'cặp câu hỏi-trả lời X-quang ngực được dịch từ MIMIC-CXR và VQA-RAD, một bộ dữ liệu kết hợp Tiếng Việt chưa từng tồn tại trước đây.' },
     'problem.cell2':     { en: 'The system benefits two groups of users: <strong>doctors</strong>, saving time with accurate answers from a specialized, trained, and researched model; and <strong>patients</strong> who want to learn about their illnesses.',
                            vi: 'Lợi ích mang lại cho hai đối tượng người dùng: Hệ thống này dành cho <strong>các bác sĩ</strong>, giúp tiết kiệm thời gian với các các câu trả lời chính xác từ một mô hình chuyên biệt đã được đào tạo và nghiên cứu; <strong>các bệnh nhân</strong> muốn tìm hiểu về bệnh của mình.' },
     'problem.cell3':     { en: 'parameters: our budget, against published vision-language models ranging from 2B to 4B that we benchmark zero-shot.',
                            vi: 'tham số: ngân sách của chúng tôi, đối đầu với các mô hình thị giác-ngôn ngữ từ 2B đến 4B mà chúng tôi đánh giá zero-shot.' },
-    'problem.prose1':    { en: 'Vietnamese is an analytic language with unmarked word boundaries: spaces separate <em>syllables</em>, not semantic words. Multilingual encoders trained on space-separated languages systematically degrade on Vietnamese clinical text — the very text that contains the patient\u2019s symptoms, the radiologist\u2019s impression, and the question a doctor actually wants answered.',
+    'problem.prose1':    { en: 'Vietnamese is an analytic language with unmarked word boundaries: spaces separate <em>syllables</em>, not semantic words. Multilingual encoders trained on space-separated languages systematically degrade on Vietnamese clinical text, the very text that contains the patient\u2019s symptoms, the radiologist\u2019s impression, and the question a doctor actually wants answered.',
                            vi: 'Tiếng Việt là ngôn ngữ phân tích với ranh giới từ không được đánh dấu: dấu cách phân tách <em>âm tiết</em>, chứ không phải từ ngữ-nghĩa. Các encoder đa ngôn ngữ được huấn luyện trên các ngôn ngữ phân-tách-bằng-dấu-cách suy giảm chất lượng có hệ thống khi xử lý văn bản lâm sàng tiếng Việt — chính là văn bản chứa triệu chứng bệnh nhân, nhận định của bác sĩ X-quang, và câu hỏi mà bác sĩ thực sự cần lời giải.' },
     'problem.prose2':    { en: 'Our hypothesis: <strong>a system built specifically for Vietnamese medical language will outperform much larger general-purpose models on Vietnamese medical tasks.</strong> This project tests it.',
                            vi: 'Giả thuyết của chúng tôi: <strong>một hệ thống được xây dựng riêng cho ngôn ngữ y khoa tiếng Việt sẽ vượt qua các mô hình đa-năng lớn hơn nhiều trên các nhiệm vụ y khoa tiếng Việt.</strong> Đồ án này kiểm chứng giả thuyết đó.' },
