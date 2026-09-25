@@ -60,8 +60,8 @@
 
     /* Section 02 — Method */
     'method.kicker':     { en: '02 — Method',                              vi: '02 — Phương pháp' },
-    'method.title':      { en: 'Four modules. One T4 GPU. A pipeline shaped by Vietnamese clinical text.',
-                           vi: 'Bốn mô-đun. Một GPU T4. Một pipeline được định hình bởi văn bản lâm sàng tiếng Việt.' },
+    'method.title':      { en: 'A four-component model architecture.',
+                           vi: 'Một kiến trúc mô hình bốn thành phần.' },
     'method.archiAlt':   { en: 'Architecture overview: chest X-ray and Vietnamese question flow through IEM, QEM, MSCAv2, and TAM modules to produce a Vietnamese answer.',
                            vi: 'Tổng quan kiến trúc: X-quang ngực và câu hỏi tiếng Việt đi qua các mô-đun IEM, QEM, MSCAv2 và TAM để sinh ra câu trả lời tiếng Việt.' },
     'method.archiCaption':{en: '<span class="archi__caption-num">Figure 1</span> End-to-end architecture. Frozen biomedical encoders feed a custom cross-attention adapter; a 4-bit quantized Qwen2.5-3B generates the answer. Only the colored modules are trainable.',
