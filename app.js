@@ -1,20 +1,5 @@
 (function () {
   'use strict';
-
-  // The translation map. Each top-level key holds two strings: one for English
-  // (`en`) and one for Vietnamese (`vi`). Keys appear in DOM via the data-i18n
-  // family of attributes; see applyI18n() for the lookup behaviour.
-  //
-  // Strings may contain trusted HTML (only used with data-i18n-html). All
-  // strings are author-controlled — no user input enters this map.
-  //
-  // Tone & register conventions for the Vietnamese half:
-  //  • Formal academic register, addressing a clinical / research audience.
-  //  • Technical terms (model names, layer names, numeric hyperparameters)
-  //    stay in their original Latin script.
-  //  • Field-specific anglicisms common in Vietnamese ML literature stay
-  //    untranslated (e.g. backbone, pipeline, encoder) where the Vietnamese
-  //    equivalent would be either obscure or longer than helpful.
   const I18N = {
     /* Navigation */
     'nav.problem':       { en: 'Problem',         vi: 'Vấn đề' },
@@ -38,11 +23,11 @@
     'hero.questionTag':  { en: 'QUESTION · VIETNAMESE',
                            vi: 'CÂU HỎI · TIẾNG VIỆT' },
     'hero.eyebrow':      { en: 'Undergraduate IT Project · Ton Duc Thang University · 2025–2026',
-                           vi: 'Dự án CNTT · Trường Đại học Tôn Đức Thắng · 2025–2026' },
+                           vi: 'Dự án CNTT · 2025–2026' },
     'hero.title':        { en: 'Advancing Vietnamese<br><em>Visual Question Answering</em><br><span class="hero__title-tail">for healthcare.</span>',
                            vi: 'Phát triển <em>Hệ thống Hỏi&nbsp;đáp Hình ảnh</em><br>Y khoa <span class="hero__title-tail">cho tiếng Việt.</span>' },
     'hero.lede':         { en: 'An end-to-end Vietnamese Medical VQA system designed to answer clinical questions regarding diverse medical imagery (including chest X-rays, brain MRIs, etc...). Built on a custom architecture combines <strong>two frozen vision encoders (BiomedCLIP and DINOv3)</strong> with a Vietnamese clinical language model (<strong>ViHealthBERT</strong>) and a <strong>Qwen2.5-3B</strong> generative backbone, bridged via a <strong>Multi-Scale Cross-Attention</strong> mechanism. Additionally, we introduce <strong>specialized medical data processing procedures</strong>, including a corpus-derived dynamic-programming syllable re-segmenter and a novel <strong>Clinical-Token Priority Loss (CTPL)</strong> function.',
-                           vi: 'Hệ thống VQA y tế tiếng Việt hoàn chỉnh được thiết kế để trả lời các câu hỏi lâm sàng liên quan đến nhiều loại hình ảnh y tế khác nhau (bao gồm X-quang ngực, MRI não, v.v...). Hệ thống được xây dựng trên kiến ​​trúc tùy chỉnh kết hợp <strong>hai bộ mã hóa hình ảnh cố định (BiomedCLIP và DINOv3)</strong> với mô hình ngôn ngữ lâm sàng tiếng Việt (<strong>ViHealthBERT</strong>) và hệ thống tạo sinh <strong>Qwen2.5-3B</strong>, được kết nối thông qua cơ chế <strong>Chú ý chéo đa tỷ lệ (Multi-Scale Cross-Attention)</strong>. Ngoài ra, chúng tôi giới thiệu các <strong>quy trình xử lý dữ liệu y tế chuyên biệt</strong>, bao gồm bộ phân đoạn lại âm tiết lập trình động dựa trên ngữ liệu và hàm <strong>Mất mát ưu tiên mã thông báo lâm sàng (CTPL)</strong> mới.' },
+                           vi: 'Hệ thống VQA y tế tiếng Việt hoàn chỉnh được thiết kế để trả lời các câu hỏi y khoa lâm sàng liên quan đến nhiều loại hình ảnh y tế khác nhau (bao gồm X-quang ngực, MRI não, v.v...). Hệ thống được xây dựng trên kiến ​​trúc tùy chỉnh kết hợp <strong>hai bộ mã hóa hình ảnh cố định (BiomedCLIP và DINOv3)</strong> với mô hình ngôn ngữ lâm sàng tiếng Việt (<strong>ViHealthBERT</strong>) và hệ thống tạo sinh <strong>Qwen2.5-3B</strong>, được kết nối thông qua cơ chế <strong>Chú ý chéo đa tỷ lệ (Multi-Scale Cross-Attention)</strong>. Ngoài ra, chúng tôi giới thiệu các <strong>quy trình xử lý dữ liệu y tế chuyên biệt</strong>, bao gồm bộ phân đoạn lại âm tiết lập trình động dựa trên ngữ liệu và hàm <strong>Mất mát ưu tiên mã thông báo lâm sàng (CTPL)</strong> mới.' },
     'hero.affiliation':  { en: 'Faculty of Information Technology, Ton Duc Thang University, Ho Chi Minh City, Vietnam',
                            vi: 'Khoa Công nghệ Thông tin, Trường Đại học Tôn Đức Thắng, Thành phố Hồ Chí Minh, Việt Nam' },
     'hero.ctaResults':   { en: 'See the results',     vi: 'Xem kết quả' },
@@ -56,7 +41,7 @@
     'hero.metricsFootnote':{ en: 'Comparison: our beam-4 score vs Qwen2.5-VL-3B (zero-shot, greedy decoding). Under matched greedy decoding our system reaches 53.06 / 24.65 / 64.58 — also above every baseline.',
                              vi: 'So sánh: điểm beam-4 của hệ thống vs Qwen2.5-VL-3B (zero-shot, giải mã tham lam). Cùng phương thức giải mã tham lam, hệ thống đạt 53,06 / 24,65 / 64,58 — vẫn vượt mọi baseline.' },
     'hero.bottomRule':   { en: 'chest X-ray · Vietnamese clinical questions · free-form answers',
-                           vi: 'X-quang ngực · câu hỏi lâm sàng tiếng Việt · câu trả lời tự do' },
+                           vi: 'X-quang ngực · câu hỏi y khoa tiếng Việt · câu trả lời tự do' },
 
     /* Section 01 — Problem */
     'problem.kicker':    { en: '01 — The gap', vi: '01 — Khoảng trống' },
@@ -121,9 +106,9 @@
                            vi: 'MSCAv2: 3 lớp × 8 head × dim 256' },
 
     /* Section 03 — Data processing */
-    'data.kicker':       { en: '03 — Data processing', vi: '03 — Xử lý dữ liệu' },
+    'data.kicker':       { en: '03 - Data processing', vi: '03 - Xử lý dữ liệu' },
     'data.title':        { en: 'Specialized preprocessing for <em>chest imagery</em> and <em>Vietnamese clinical text.</em>',
-                           vi: 'Tiền xử lý chuyên biệt cho <em>hình ảnh ngực</em> và <em>văn bản lâm sàng tiếng Việt.</em>' },
+                           vi: 'Tiền xử lý chuyên biệt cho <em>hình ảnh ngực</em> và <em>văn bản y khoa lâm sàng tiếng Việt.</em>' },
     'data.sub':          { en: 'Off-the-shelf preprocessing fails on medical X-rays (low dynamic range, embedded annotations) and on Vietnamese clinical text (concatenated syllables from imperfect translation, foreign drug names, medical abbreviations that no general-purpose tokenizer knows). Each pipeline below was custom-built to handle the edge cases we found in our translated VQA-RAD + MIMIC-CXR corpus.',
                            vi: 'Tiền xử lý có sẵn thất bại trên X-quang y khoa (dải động thấp, chú thích nhúng) và trên văn bản lâm sàng tiếng Việt (các âm tiết bị ghép do dịch không hoàn hảo, tên thuốc ngoại, viết tắt y khoa mà không tokenizer đa-năng nào biết). Mỗi pipeline dưới đây được xây-dựng-riêng để xử lý các trường hợp biên mà chúng tôi gặp trong ngữ liệu VQA-RAD + MIMIC-CXR đã dịch.' },
     'data.imgKicker':    { en: '3.1 · Image enhancement', vi: '3.1 · Tăng cường hình ảnh' },
