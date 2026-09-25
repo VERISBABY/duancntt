@@ -236,15 +236,13 @@
     'repro.strat':       { en: 'Stratification',   vi: 'Phân tầng' },
 
     /* Footer */
-    'footer.authors':    { en: 'Authors',          vi: 'Tác giả' },
+    'footer.authors':    { en: 'Authors',          vi: 'Các Tác giả' },
     'footer.authorMeta1':{ en: 'Lead author · Data pipeline, fix Basic text pre-processing, modeling, experiments, report',
                            vi: 'Tác giả chính · Pipeline dữ liệu, sửa lại Xử lý sơ bộ văn bản cơ bản, xây mô hình, thí nghiệm, viết báo cáo' },
     'footer.authorMeta2':{ en: 'Co-author · Basic text pre-processing, dataset translation',
                            vi: 'Đồng tác giả · Tiền-xử-lý văn bản cơ bản, dịch dữ liệu' },
     'footer.citeAs':     { en: 'Cite as',          vi: 'Trích dẫn dưới dạng' },
     'footer.copyBtn':    { en: 'Copy BibTeX',      vi: 'Sao chép BibTeX' },
-    'footer.builtAt':    { en: 'Built at <span class="footer__institution">Ton Duc Thang University</span> · Faculty of Information Technology',
-                           vi: 'Thực hiện tại <span class="footer__institution">Trường Đại học Tôn Đức Thắng</span> · Khoa Công nghệ Thông tin' },
   };
 
 
