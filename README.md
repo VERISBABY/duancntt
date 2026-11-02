@@ -111,7 +111,7 @@ This is a research prototype for clinical decision support, not a medical device
 
 ## Team
 
-| Member | Student ID | Main responsibilities |
+| Member | Main responsibilities |
 |---|---|---|
 | Trần Thị Thế Nhân | Vietnamese medical data processing pipeline; IEM, QEM, MSCA, TAM and CTPL implementation; training and ablation experiments; architecture diagrams; primary report author |
 | Nguyễn Phúc Minh Đăng | Translation pipeline; first-pass Vietnamese text cleaning (Unicode normalisation) |
