@@ -2,8 +2,6 @@
 
 Showcase website for the **Advancing Vietnamese Visual Question Answering (VQA) for Healthcare** project.
 
-🌐 Project page: [verisbaby.github.io/duancntt](https://verisbaby.github.io/duancntt)
-
 ---
 
 ## Overview
