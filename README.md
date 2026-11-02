@@ -1,4 +1,4 @@
-# Vietnamese Medical VQA project website
+# Vietnamese Medical VQA Project
 
 Showcase website for the **Advancing Vietnamese Visual Question Answering (VQA) for Healthcare** project.
 
