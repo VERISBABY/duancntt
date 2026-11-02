@@ -28,8 +28,6 @@
                            vi: 'Phát triển <em>Hệ thống Hỏi&nbsp;đáp Hình ảnh</em><br>Y khoa <span class="hero__title-tail">cho tiếng Việt.</span>' },
     'hero.lede':         { en: 'An end-to-end Vietnamese Medical VQA system designed to answer clinical questions regarding diverse medical imagery (including chest X-rays, brain MRIs, etc...). Built on a custom architecture combines <strong>two frozen vision encoders (BiomedCLIP and DINOv3)</strong> with a Vietnamese clinical language model (<strong>ViHealthBERT</strong>) and a <strong>Qwen2.5-3B</strong> generative backbone, bridged via a <strong>Multi-Scale Cross-Attention</strong> mechanism. Additionally, we introduce <strong>specialized medical data processing procedures</strong>, including a corpus-derived dynamic-programming syllable re-segmenter and a novel <strong>Clinical-Token Priority Loss (CTPL)</strong> function.',
                            vi: 'Hệ thống VQA y tế tiếng Việt hoàn chỉnh được thiết kế để trả lời các câu hỏi y khoa lâm sàng liên quan đến nhiều loại hình ảnh y tế khác nhau (bao gồm X-quang ngực, MRI não, v.v...). Hệ thống được xây dựng trên kiến ​​trúc tùy chỉnh kết hợp <strong>hai bộ mã hóa hình ảnh cố định (BiomedCLIP và DINOv3)</strong> với mô hình ngôn ngữ lâm sàng tiếng Việt (<strong>ViHealthBERT</strong>) và hệ thống tạo sinh <strong>Qwen2.5-3B</strong>, được kết nối thông qua cơ chế <strong>Chú ý chéo đa tỷ lệ (Multi-Scale Cross-Attention)</strong>. Ngoài ra, chúng tôi giới thiệu các <strong>quy trình xử lý dữ liệu y tế chuyên biệt</strong>, bao gồm bộ phân đoạn lại âm tiết lập trình động dựa trên ngữ liệu và hàm <strong>Mất mát ưu tiên mã thông báo lâm sàng (CTPL)</strong> mới.' },
-    'hero.affiliation':  { en: 'Faculty of Information Technology, Ton Duc Thang University, Ho Chi Minh City, Vietnam',
-                           vi: 'Khoa Công nghệ Thông tin, Trường Đại học Tôn Đức Thắng, Thành phố Hồ Chí Minh, Việt Nam' },
     'hero.ctaResults':   { en: 'See the results',     vi: 'Xem kết quả' },
     'hero.ctaAuthors':   { en: 'Author links',        vi: 'Liên hệ tác giả' },
     'hero.metricsCaption':{ en: 'Test set · 800 samples · beam-4 decoding',
@@ -40,11 +38,11 @@
     'hero.mdrTag':       { en: 'clinical recall',  vi: 'recall lâm sàng' },
     'hero.metricsFootnote':{ en: 'Comparison: our beam-4 score vs Qwen2.5-VL-3B (zero-shot, greedy decoding). Under matched greedy decoding our system reaches 53.06 / 24.65 / 64.58 — also above every baseline.',
                              vi: 'So sánh: điểm beam-4 của hệ thống vs Qwen2.5-VL-3B (zero-shot, giải mã tham lam). Cùng phương thức giải mã tham lam, hệ thống đạt 53,06 / 24,65 / 64,58 — vẫn vượt mọi baseline.' },
-    'hero.bottomRule':   { en: 'chest X-ray · Vietnamese clinical questions · free-form answers',
-                           vi: 'X-quang ngực · câu hỏi y khoa tiếng Việt · câu trả lời tự do' },
+    'hero.bottomRule':   { en: 'chest X-ray · Vietnamese clinical questions',
+                           vi: 'X-quang ngực · câu hỏi y khoa tiếng Việt' },
 
     /* Section 01 — Problem */
-    'problem.kicker':    { en: '01 — The gap', vi: '01 — Khoảng trống' },
+    'problem.kicker':    { en: '01. The gap', vi: '01. Khoảng trống' },
     'problem.title':     { en: 'Vietnamese clinicians are reading the same images as everyone else. They\u2019re asking questions in their own language. Today\u2019s medical AI barely listens.',
                            vi: 'Bác sĩ Việt Nam đọc cùng những hình ảnh như mọi nơi khác. Họ đặt câu hỏi bằng tiếng mẹ đẻ. AI y khoa hiện nay gần như không lắng nghe.' },
     'problem.cell1':     { en: 'chest-X-ray Q/A pairs we translated from MIMIC-CXR and VQA-RAD, a combined Vietnamese dataset that has never existed before.',
@@ -59,7 +57,7 @@
                            vi: 'Giả thuyết của chúng tôi: <strong>một hệ thống được xây dựng riêng cho ngôn ngữ y khoa tiếng Việt sẽ vượt qua các mô hình đa-năng lớn hơn nhiều trên các nhiệm vụ y khoa tiếng Việt.</strong> Đồ án này kiểm chứng giả thuyết đó.' },
 
     /* Section 02 — Method */
-    'method.kicker':     { en: '02 — Method',                              vi: '02 — Phương pháp' },
+    'method.kicker':     { en: '02. Method',                              vi: '02. Phương pháp' },
     'method.title':      { en: 'A four-component model architecture.',
                            vi: 'Một kiến trúc mô hình bốn thành phần.' },
     'method.archiAlt':   { en: 'Architecture overview: chest X-ray and Vietnamese question flow through IEM, QEM, MSCAv2, and TAM modules to produce a Vietnamese answer.',
@@ -91,7 +89,7 @@
     'method.p2L1':       { en: 'BiomedCLIP ViT-B/16 (frozen) · 224×224 input',
                            vi: 'BiomedCLIP ViT-B/16 (đông cứng) · đầu vào 224×224' },
     'method.p2L2':       { en: 'DINOv3 ViT-S/16 (frozen) · self-supervised general features',
-                           vi: 'DINOv3 ViT-S/16 (đông cứng) · đặc trưng tổng quát tự-giám-sát' },
+                           vi: 'DINOv3 ViT-S/16 (frozen) · đặc trưng tổng quát tự-giám-sát' },
     'method.p2L3':       { en: 'Trainable <code>dim_proj</code> · 384 → 768',
                            vi: 'Lớp <code>dim_proj</code> có thể huấn luyện · 384 → 768' },
     'method.p3Title':    { en: 'Clinical-token priority for what matters.',
@@ -106,7 +104,7 @@
                            vi: 'MSCAv2: 3 lớp × 8 head × dim 256' },
 
     /* Section 03 — Data processing */
-    'data.kicker':       { en: '03 - Data processing', vi: '03 - Xử lý dữ liệu' },
+    'data.kicker':       { en: '03. Data processing', vi: '03. Xử lý dữ liệu' },
     'data.title':        { en: 'Specialized preprocessing for <em>chest imagery</em> and <em>Vietnamese clinical text.</em>',
                            vi: 'Tiền xử lý chuyên biệt cho <em>hình ảnh ngực</em> và <em>văn bản y khoa lâm sàng tiếng Việt.</em>' },
     'data.sub':          { en: 'Off-the-shelf preprocessing fails on medical X-rays (low dynamic range, embedded annotations) and on Vietnamese clinical text (concatenated syllables from imperfect translation, foreign drug names, medical abbreviations that no general-purpose tokenizer knows). Each pipeline below was custom-built to handle the edge cases we found in our translated VQA-RAD + MIMIC-CXR corpus.',
@@ -162,7 +160,7 @@
                            vi: 'Tên thuốc như <code>paclitaxel</code> và <code>carboplatin</code> chứa các chữ cái (cụm <code>p</code>, <code>c</code>) không phải âm tiết tiếng Việt hợp lệ. Bộ tách được kiểm-chứng-bằng-từ-điển thấy không có cách tách hợp lệ và <strong>để nguyên token một cách an toàn</strong> \u2014 không tách sai, không hỏng dữ liệu.' },
 
     /* Section 04 — Results */
-    'results.kicker':    { en: '04 — Results', vi: '04 — Kết quả' },
+    'results.kicker':    { en: '04. Results', vi: '04. Kết quả' },
     'results.title':     { en: 'Across every metric on the 800-sample test set, our 3B parameters system beats every published baseline.',
                            vi: 'Trên mọi metric của tập kiểm thử 800 mẫu, hệ thống 3 tỷ tham số của chúng tôi vượt mọi baseline đã công bố.' },
     'results.sub':       { en: 'Zero-shot baselines evaluated under identical Vietnamese prompts and greedy decoding. Our system is shown under beam-4 decoding; the greedy-decoding equivalent is reported above the fold.',
@@ -181,7 +179,7 @@
                               vi: 'Pipeline văn bản (tách-lại hiểu-tiếng-Việt + augmentation) là động lực đơn lẻ lớn nhất tạo ra các cải thiện đo-được. Thị giác kép là <em>cần nhưng chưa đủ</em>: thêm DINOv3 mà không có pipeline văn bản thực ra <em>làm giảm</em> ROUGE-L (E1 vs E0). Các thành phần <strong>nhân lên nhau</strong>, không cộng vào nhau.' },
 
     /* Section 05 — Predictions */
-    'samples.kicker':    { en: '05 — Predictions', vi: '05 — Các chuẩn đoán' },
+    'samples.kicker':    { en: '05. Predictions', vi: '05. Các chuẩn đoán' },
     'samples.title':     { en: 'Six predictions from the test set (never seen during training)',
                            vi: 'Sáu mẫu dự đoán từ tập kiểm thử (chưa dùng trong huấn luyện)' },
     'samples.sub':       { en: 'Each panel pairs the input chest X-ray with the Vietnamese question, the radiologist\u2019s reference answer (green) and our model\u2019s prediction (red), plus per-sample ROUGE-L, Token-F1, and MDR.',
@@ -196,7 +194,7 @@
                            vi: '<span class="samples__caption-num">Hình 5</span> Sinh văn bản dạng tự do nắm bắt được ý định lâm sàng trên nhiều loại truy vấn từ sàng lọc nhị phân (\u201Ccó bằng chứng tràn dịch màng phổi không?\u201D) đến định vị (\u201Cvị trí đông đặc ở đâu?\u201D) đến mô tả ấn tượng (\u201Cbáo cáo nói gì về kích thước tim?\u201D).' },
 
     /* Section 06 — Reproducibility */
-    'repro.kicker':      { en: '06 — Reproducibility', vi: '06 — Tái lập' },
+    'repro.kicker':      { en: '06. Reproducibility', vi: '06. Tái lập' },
     'repro.title':       { en: 'Trained on one T4 GPU, 12 epochs. Every hyper-parameter accounted for.',
                            vi: 'Đã huấn luyện trên một GPU T4, 12 epoch. Mọi siêu tham số được công bố đầy đủ.' },
     'repro.sub':         { en: 'Source notebooks, hyper-parameter table, and training environment details will be released alongside the published paper.',
@@ -253,13 +251,6 @@
     window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const CURSOR_FX_ENABLED = HAS_HOVER && !PREFERS_REDUCED_MOTION;
 
-
-  // ─── 9. i18n ENGINE ───────────────────────────────────────────────────
-  // Persists the user's choice in localStorage under the key 'vqaLang'.
-  // Falls back to browser language detection on first visit: any visitor
-  // whose primary navigator.language begins with 'vi' lands on Vietnamese,
-  // everyone else on English. This matches the user's request: "I am in
-  // Vietnam, so the website will be entirely in Vietnamese".
   const LANG_KEY = 'vqaLang';
 
   function detectInitialLang() {
@@ -354,7 +345,7 @@
   }
 
 
-  // ─── 1. Reveal-on-scroll ──────────────────────────────────────────────
+  //  Reveal-on-scroll 
   const reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     const obs = new IntersectionObserver(
